@@ -13,4 +13,3 @@ package_vector <- c(
 	"MASS",
 	"brms")
 install.packages(package_vector)
-devtools::install_github("rmcelreath/rethinking@2.13")
