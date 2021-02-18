@@ -1,13 +1,20 @@
 FROM rocker/tidyverse:4.0.3 AS base
 LABEL maintainer="edjee@uchicago.edu"
 
+ENV DEBIAN_FRONTEND noninteractive
+
 COPY rstudio-prefs.json /home/rstudio/.config/
 
 FROM base AS apt-get
-RUN  apt-get update -qq \ 
-  && apt-get -y install apt-utils libgit2-dev libssh2-1-dev libv8-dev \
-  libxml2-dev build-essential ed pkg-config apt-utils libglu1-mesa-dev \
-  libnlopt-dev nano libgsl-dev libz-dev
+
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \ 
+	libv8-dev \
+	apt-utils \
+	ed \
+	libnlopt-dev \
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/
 
 FROM apt-get AS rstan-config
 RUN mkdir -p $HOME/.R/ \ 
@@ -19,9 +26,10 @@ RUN mkdir -p $HOME/.R/ \
 
 # Install rstan
 RUN install2.r --error --deps TRUE \
+    V8 \	
     rstan 
 
-FROM base as install-r
+FROM rstan-config AS install-r
 COPY install.R /home/rstudio/
 RUN chown -R  rstudio /home/rstudio/
 
@@ -29,3 +37,4 @@ RUN if [ -f /home/rstudio/install.R ]; then R --quiet -f /home/rstudio/install.R
 
 
 RUN rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
