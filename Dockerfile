@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:4.0.4 AS base
+FROM rocker/tidyverse:4.0.3 AS base
 LABEL maintainer="edjee@uchicago.edu"
 
 COPY rstudio-prefs.json /home/rstudio/.config/
