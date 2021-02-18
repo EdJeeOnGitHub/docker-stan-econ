@@ -1,5 +1,4 @@
 package_vector <- c(
-	"rstan",
 	"bayesplot",
 	"haven",
 	"ggstance",

@@ -17,6 +17,10 @@ RUN mkdir -p $HOME/.R/ \
   && echo "rstan::rstan_options(auto_write = TRUE)" >> /home/rstudio/.Rprofile \
   && echo "options(mc.cores = min(4, parallel::detectCores()))" >> /home/rstudio/.Rprofile
 
+# Install rstan
+RUN install2.r --error --deps TRUE \
+    rstan 
+
 FROM base as install-r
 COPY install.R /home/rstudio/
 RUN chown -R  rstudio /home/rstudio/
